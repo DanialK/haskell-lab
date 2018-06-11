@@ -1,0 +1,14 @@
+2018-06-11 00:23:44 [ThreadId 15] ERROR phoityne - load file fail.[/home/danial/haskell-lab/test/Spec.hs]
+2018-06-11 00:23:44 [ThreadId 15] ERROR phoityne - startup load error. /home/danial/haskell-lab/test/Spec.hs
+
+2018-06-11 00:23:55 [ThreadId 15] ERROR phoityne - load file fail.[/home/danial/haskell-lab/test/Spec.hs]
+2018-06-11 00:23:55 [ThreadId 15] ERROR phoityne - startup load error. /home/danial/haskell-lab/test/Spec.hs
+
+2018-06-11 00:24:02 [ThreadId 15] ERROR phoityne - [deleteBreakPointOnGHCi] invalid delete break point. BreakPointData {nameBreakPointData = "Main", srcPosBreakPointData = SourcePosition {filePathSourcePosition = "/home/danial/haskell-lab/haskell-practice/app/Main.hs", startLineNoSourcePosition = 13, startColNoSourcePosition = -1, endLineNoSourcePosition = -1, endColNoSourcePosition = -1}, breakNoBreakPointData = Nothing, conditionBreakPointData = Nothing, hitConditionBreakPointData = Nothing, hitCountBreakPointData = 0}
+2018-06-11 00:24:05 [ThreadId 15] ERROR phoityne - [deleteBreakPointOnGHCi] invalid delete break point. BreakPointData {nameBreakPointData = "Main", srcPosBreakPointData = SourcePosition {filePathSourcePosition = "/home/danial/haskell-lab/haskell-practice/app/Main.hs", startLineNoSourcePosition = 13, startColNoSourcePosition = -1, endLineNoSourcePosition = -1, endColNoSourcePosition = -1}, breakNoBreakPointData = Nothing, conditionBreakPointData = Nothing, hitConditionBreakPointData = Nothing, hitCountBreakPointData = 0}
+2018-06-11 00:24:07 [ThreadId 15] ERROR phoityne - load file fail.[/home/danial/haskell-lab/test/Spec.hs]
+2018-06-11 00:24:07 [ThreadId 15] ERROR phoityne - startup load error. /home/danial/haskell-lab/test/Spec.hs
+
+2018-06-11 00:24:59 [ThreadId 15] ERROR phoityne - load file fail.[/home/danial/haskell-lab/app/Main.hs]
+2018-06-11 00:24:59 [ThreadId 15] ERROR phoityne - startup load error. /home/danial/haskell-lab/app/Main.hs
+

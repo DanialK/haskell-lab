@@ -29,7 +29,7 @@ colourModel c =
 -- Non-exhaustive pattern match
 colourModel :: Colour -> String
 colourModel c =
-    case c of RGB _ _ _ -> "RGB"
+    case c of RGB -> "RGB"
 
 main :: IO ()
 main = do
