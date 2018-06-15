@@ -12,3 +12,14 @@
 2018-06-11 00:24:59 [ThreadId 15] ERROR phoityne - load file fail.[/home/danial/haskell-lab/app/Main.hs]
 2018-06-11 00:24:59 [ThreadId 15] ERROR phoityne - startup load error. /home/danial/haskell-lab/app/Main.hs
 
+2018-06-11 23:09:59 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: h"
+2018-06-11 23:10:01 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: t"
+2018-06-11 23:10:19 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: over"
+2018-06-11 23:10:21 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: h"
+2018-06-11 23:10:22 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: t"
+2018-06-11 23:10:53 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: a"
+2018-06-11 23:10:54 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: y"
+2018-06-11 23:10:56 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: y"
+2018-06-11 23:10:59 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: a"
+2018-06-11 23:11:02 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: a"
+2018-06-11 23:13:02 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: y"
