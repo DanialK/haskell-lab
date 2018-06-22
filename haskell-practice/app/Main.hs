@@ -141,3 +141,7 @@ main = do
   putStrLn $ colorModel c
   putStrLn $ colorModel $ RGB 2 2 3
   print $ someFunc "I love my girl"
+
+
+  -- List comprehention
+  -- [[(row, col) | col <- [0..7]] | row <- [0..7]]

@@ -63,7 +63,7 @@ playGame game = do
       s = score game
       t = totalWords game
   hSetBuffering stdout NoBuffering
-  putStrLn ((show s) ++ "/" ++ (show t))
+  putStrLn (show s ++ "/" ++ show t)
   if s < t then do
     putStr (formatGrid grid)
     putStr "Enter a word> "
@@ -74,9 +74,9 @@ playGame game = do
     putStrLn "Congratulations!"
 
 gridWithCoords :: Grid Char -> Grid Cell
-gridWithCoords grid = zipWith zipRows [0..] grid
-  where zipRows y row = zipWith (zipRow y) [0..] row
-        zipRow y x char = Cell (y, x) char
+gridWithCoords = zipWith zipRows [0..]
+  where zipRows y = zipWith (zipRow y) [0..]
+        zipRow y x = Cell (y, x)
 
 formatGrid :: Grid Cell -> String
 formatGrid grid =
@@ -102,7 +102,7 @@ getLines grid =
       diagonal = diagonalize horizontal
       diagonal' = diagonalize (map reverse horizontal)
       lines = horizontal ++ vertical ++ diagonal ++ diagonal'
-  in lines ++ (map reverse lines)
+  in lines ++ map reverse lines
 
 diagonalize :: Grid Cell -> Grid Cell
 -- diagonalize grid = transpose (skew grid)
