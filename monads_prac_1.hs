@@ -1,3 +1,4 @@
+-- A Fistful of Monads  - http://learnyouahaskell.com/a-fistful-of-monads
 routine :: Maybe String
 routine = do
     start <- return ""
