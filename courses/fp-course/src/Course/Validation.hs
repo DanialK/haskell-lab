@@ -1,3 +1,4 @@
+-- Done 02/09/18
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
