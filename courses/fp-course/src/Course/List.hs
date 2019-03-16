@@ -140,8 +140,7 @@ map ::
   (a -> b)
   -> List a
   -> List b
--- map f = foldRight (\a b -> f a :. b) Nil
-map f = foldLeft (\a b -> f a :. b) Nil
+map f = foldRight (\a b -> f a :. b) Nil
 
 
 -- | Return elements satisfying the given predicate.
@@ -193,7 +192,7 @@ infixr 5 ++
 flatten ::
   List (List a)
   -> List a
-flatten f = foldRight (++) Nil
+flatten = foldRight (++) Nil
 
 -- | Map a function then flatten to a list.
 --
@@ -209,8 +208,7 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
-flatMap =
-  error "todo: Course.List#flatMap"
+flatMap f = flatten . map f
 
 -- | Flatten a list of lists to a list (again).
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
@@ -220,7 +218,7 @@ flattenAgain ::
   List (List a)
   -> List a
 flattenAgain =
-  error "todo: Course.List#flattenAgain"
+  flatMap id
 
 -- | Convert a list of optional values to an optional list of values.
 --
@@ -248,7 +246,9 @@ seqOptional ::
   List (Optional a)
   -> Optional (List a)
 seqOptional =
-  error "todo: Course.List#seqOptional"
+  foldRight (twiceOptional (:.)) (Full Nil)
+-- TODO: review this
+
 
 -- | Find the first element in the list matching the predicate.
 --
@@ -270,8 +270,11 @@ find ::
   (a -> Bool)
   -> List a
   -> Optional a
-find =
-  error "todo: Course.List#find"
+find f as =
+  let filtered = filter f as in
+  case filtered of
+    Nil -> Empty
+    a :. _ -> Full a 
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -289,8 +292,13 @@ find =
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 =
-  error "todo: Course.List#lengthGT4"
+-- lengthGT4 as=
+--   let length = foldRight (\a b -> 1 + b) 0 as in
+--   length > 4
+
+lengthGT4 (_:._:._:._:._:._) = True
+lengthGT4 _ = False
+  
 
 -- | Reverse a list.
 --
@@ -307,7 +315,7 @@ reverse ::
   List a
   -> List a
 reverse =
-  error "todo: Course.List#reverse"
+  foldLeft (flip (:.)) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
@@ -336,7 +344,7 @@ notReverse ::
   List a
   -> List a
 notReverse =
-  error "todo: Is it even possible?"
+  id
 
 ---- End of list exercises
 

@@ -4,7 +4,7 @@ If you'd rather use a pre-configured haskell development environment, then these
 get you up and running in a VirtualBox virtual machine. The machine includes:
 
  - A Xubuntu desktop environment
- - GHC 8.0.2 installed
+ - GHC 8.4.4 installed
  - doctest
  - emacs with haskell-mode
  - vim

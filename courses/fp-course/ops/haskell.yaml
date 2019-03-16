@@ -5,13 +5,13 @@
     repo: ppa:hvr/ghc
   become: yes
 
-- name: Install ghc-8.0.2
+- name: Install ghc-8.4.4
   apt:
     name: "{{ item }}"
     update_cache: yes
     state: present
   with_items:
-    - ghc-8.0.2
+    - ghc-8.4.4
     - cabal-install-1.24
   become: yes
 
