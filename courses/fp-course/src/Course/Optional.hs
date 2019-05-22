@@ -109,3 +109,20 @@ instance P.Monad Optional where
     flip bindOptional
   return =
     Full
+
+
+
+-- same as foldRight but for Optional
+optional ::
+  (a -> b)
+  -> b
+  -> Optional a
+  -> b
+optional _ e Empty =
+  e
+optional f _ (Full a) =
+  f a
+
+-- optional :: (a -> b) -> b -> Optional a -> b
+-- optional ab b oa =
+--  (ab <$> oa) ?? b

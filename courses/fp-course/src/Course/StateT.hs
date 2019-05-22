@@ -307,17 +307,6 @@ instance Monad f => Applicative (OptionalT f) where
   -- OptionalT f <*> OptionalT a =
   --   OptionalT (f >>= optional (\f' -> (f' <$>) <$> a) (pure Empty))
 
-optional ::
-  (a -> b)
-  -> b
-  -> Optional a
-  -> b
-optional _ e Empty =
-  e
-optional f _ (Full a) =
-  f a
-
-
 -- | Implement the `Monad` instance for `OptionalT f` given a Monad f.
 --
 -- >>> runOptionalT $ (\a -> OptionalT (Full (a+1) :. Full (a+2) :. Nil)) =<< OptionalT (Full 1 :. Empty :. Nil)
