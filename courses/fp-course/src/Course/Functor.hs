@@ -41,7 +41,8 @@ instance Functor ExactlyOne where
     (a -> b)
     -> ExactlyOne a
     -> ExactlyOne b
-  f <$> ExactlyOne a = ExactlyOne (f a)
+  -- f <$> ExactlyOne a = ExactlyOne (f a)
+  (<$>) f= ExactlyOne . f . runExactlyOne
     
 
 -- | Maps a function on the List functor.
@@ -81,7 +82,9 @@ instance Functor ((->) t) where
     (a -> b)
     -> ((->) t a)
     -> ((->) t b)
-  f <$> r = \x -> f (r x) 
+  -- f <$> r = \x -> f (r x) 
+  (<$>) = (.)
+  
 
 -- | Anonymous map. Maps a constant value on a functor.
 --

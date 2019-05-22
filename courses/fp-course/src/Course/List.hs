@@ -127,7 +127,9 @@ length ::
 -- length Nil = 0
 -- length (x :. xs) =  1 + length xs
 -- length = foldLeft (\x _ -> x + 1) 0
+-- length = foldRight  (const (+1)) 0
 length = foldLeft (const . P.succ) 0
+
 -- | Map the given function on each element of the list.
 --
 -- >>> map (+10) (1 :. 2 :. 3 :. Nil)
@@ -140,7 +142,9 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map f = foldRight (\a b -> f a :. b) Nil
+-- map f = foldRight (\a b -> f a :. b) Nil
+-- map f = reverse . foldLeft (\b a -> f a :. b) Nil
+map f = foldRight ((:.) . f) Nil
 
 
 -- | Return elements satisfying the given predicate.
@@ -274,7 +278,7 @@ find f as =
   let filtered = filter f as in
   case filtered of
     Nil -> Empty
-    a :. _ -> Full a 
+    a :. _ -> Full a
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -298,7 +302,7 @@ lengthGT4 ::
 
 lengthGT4 (_:._:._:._:._:._) = True
 lengthGT4 _ = False
-  
+
 
 -- | Reverse a list.
 --
@@ -344,7 +348,7 @@ notReverse ::
   List a
   -> List a
 notReverse =
-  id
+  reverse
 
 ---- End of list exercises
 

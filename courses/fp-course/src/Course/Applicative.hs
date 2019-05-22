@@ -49,10 +49,12 @@ instance Applicative ExactlyOne where
     -> ExactlyOne a
   pure =
     ExactlyOne
-  (<*>) :: 
+  (<*>) ::
     ExactlyOne (a -> b)
     -> ExactlyOne a
     -> ExactlyOne b
+  -- (<*>) eoab =
+  --   mapExactlyOne (runExactlyOne eoab)
   ExactlyOne f <*> ExactlyOne a =
     ExactlyOne $ f a
 
@@ -73,6 +75,7 @@ instance Applicative List where
     -> List a
     -> List b
   f <*> a =
+    -- flatMap (flip map a) f
     flatMap (`map` a) f
 
 -- | Insert into an Optional.
@@ -97,10 +100,11 @@ instance Applicative Optional where
     Optional (a -> b)
     -> Optional a
     -> Optional b
-  Empty <*> _ = Empty
-  _ <*> Empty = Empty
-  Full f <*> Full a = Full $ f a
-    
+  -- Empty <*> _ = Empty
+  -- _ <*> Empty = Empty
+  -- Full f <*> Full a = Full $ f a
+  f <*> a =
+    bindOptional (`mapOptional` a) f
 
 -- | Insert into a constant function.
 --
@@ -123,16 +127,18 @@ instance Applicative Optional where
 instance Applicative ((->) t) where
   pure ::
     a
-    -> ((->) t a)
+    -> (->) t a
   pure =
     const
   (<*>) ::
-    ((->) t (a -> b))
-    -> ((->) t a)
-    -> ((->) t b)
+    (->) t (a -> b)
+    -> (->) t a
+    -> (->) t b
+  -- (<*>) tab ta t =
+  --   tab t (ta t)
   f <*> g =
     \x -> f x (g x)
-    
+
 
 
 -- | Apply a binary function in the environment.
@@ -160,7 +166,11 @@ lift2 ::
   -> f a
   -> f b
   -> f c
-lift2 f a b = f <$> a <*> b 
+-- lift2 f fa fb =
+--   let fbc = f <$> fa
+--   in fbc <*> fb
+lift2 f fa fb =
+  f <$> fa <*> fb
 
 -- | Apply a ternary function in the environment.
 -- /can be written using `lift2` and `(<*>)`./
@@ -282,6 +292,8 @@ lift1 =
   -> f b
   -> f b
 (*>) =
+  -- lift2 (\_ b -> b)
+  -- lift2 (flip const)
   lift2 (const id)
 
 -- | Apply, discarding the value of the second argument.
@@ -384,7 +396,7 @@ filtering ::
   -> f (List a)
 filtering p =
   foldRight (\a -> lift2 (\b -> if b then (a:.) else id) (p a)) (pure Nil)
-  
+
 
 -----------------------
 -- SUPPORT LIBRARIES --
