@@ -13,6 +13,7 @@ import Course.Applicative
 import Course.Monad
 import Course.List
 import Course.Optional
+import Course.Traversable
 import Data.Char
 
 -- $setup
@@ -169,8 +170,13 @@ valueParser a =
   Parser a
   -> Parser a
   -> Parser a
-(|||) =
-  error "todo: Course.Parser#(|||)"
+(|||) (P pa) (P pb) =
+  P (\input ->
+      let r = pa input
+          isError = isErrorResult r
+      in if isError
+      then pb input
+      else r)
 
 infixl 3 |||
 
@@ -202,7 +208,7 @@ instance Monad Parser where
     -> Parser a
     -> Parser b
   (=<<) f (P g) =
-    P (\input -> 
+    P (\input ->
       onResult (g input) (\input' a ->
                             parse (f a) input'))
 
@@ -218,8 +224,9 @@ instance Applicative Parser where
     Parser (a -> b)
     -> Parser a
     -> Parser b
-  (<*>) =
-    error "todo: Course.Parser (<*>)#instance Parser"
+  (<*>) pab pa =
+    -- (\ab -> (\a -> P (\input -> Result input (ab a))) =<< pa) =<< pab
+    (<$> pa) =<< pab
 
 -- | Return a parser that continues producing a list of values from the given parser.
 --
@@ -245,8 +252,8 @@ instance Applicative Parser where
 list ::
   Parser a
   -> Parser (List a)
-list =
-  error "todo: Course.Parser#list"
+list pa =
+  list1 pa ||| valueParser Nil
 
 -- | Return a parser that produces at least one value from the given parser then
 -- continues producing a list of values from the given parser (to ultimately produce a non-empty list).
@@ -264,8 +271,9 @@ list =
 list1 ::
   Parser a
   -> Parser (List a)
-list1 =
-  error "todo: Course.Parser#list1"
+list1 pa =
+  -- (\a -> (\b -> valueParser (a :. b)) =<< list pa) =<< pa
+  lift2 (:.) pa (list pa)
 
 -- | Return a parser that produces a character but fails if
 --
@@ -283,8 +291,12 @@ list1 =
 satisfy ::
   (Char -> Bool)
   -> Parser Char
-satisfy =
-  error "todo: Course.Parser#satisfy"
+satisfy f =
+  (\c ->
+    if f c
+    then valueParser c
+    else unexpectedCharParser c
+  ) =<< character
 
 -- | Return a parser that produces the given character but fails if
 --
@@ -295,8 +307,10 @@ satisfy =
 -- /Tip:/ Use the @satisfy@ function.
 is ::
   Char -> Parser Char
+-- is c =
+--   satisfy (== c)
 is =
-  error "todo: Course.Parser#is"
+  satisfy . (==)
 
 -- | Return a parser that produces a character between '0' and '9' but fails if
 --
@@ -308,7 +322,7 @@ is =
 digit ::
   Parser Char
 digit =
-  error "todo: Course.Parser#digit"
+  satisfy isDigit
 
 --
 -- | Return a parser that produces a space character but fails if
@@ -321,7 +335,7 @@ digit =
 space ::
   Parser Char
 space =
-  error "todo: Course.Parser#space"
+  satisfy isSpace
 
 -- | Return a parser that produces one or more space characters
 -- (consuming until the first non-space) but fails if
@@ -334,7 +348,7 @@ space =
 spaces1 ::
   Parser Chars
 spaces1 =
-  error "todo: Course.Parser#spaces1"
+  list1 space
 
 -- | Return a parser that produces a lower-case character but fails if
 --
@@ -346,7 +360,7 @@ spaces1 =
 lower ::
   Parser Char
 lower =
-  error "todo: Course.Parser#lower"
+  satisfy isLower
 
 -- | Return a parser that produces an upper-case character but fails if
 --
@@ -358,7 +372,7 @@ lower =
 upper ::
   Parser Char
 upper =
-  error "todo: Course.Parser#upper"
+  satisfy isUpper
 
 -- | Return a parser that produces an alpha character but fails if
 --
@@ -370,7 +384,7 @@ upper =
 alpha ::
   Parser Char
 alpha =
-  error "todo: Course.Parser#alpha"
+  satisfy isAlpha
 
 -- | Return a parser that sequences the given list of parsers by producing all their results
 -- but fails on the first failing parser of the list.
@@ -386,8 +400,12 @@ alpha =
 sequenceParser ::
   List (Parser a)
   -> Parser (List a)
+-- sequenceParser =
+  -- sequenceA
 sequenceParser =
-  error "todo: Course.Parser#sequenceParser"
+  foldRight (lift2 (:.)) (valueParser Nil)
+
+
 
 -- | Return a parser that produces the given number of values off the given parser.
 -- This parser fails if the given parser fails in the attempt to produce the given number of values.
@@ -403,8 +421,8 @@ thisMany ::
   Int
   -> Parser a
   -> Parser (List a)
-thisMany =
-  error "todo: Course.Parser#thisMany"
+thisMany n p =
+  sequenceParser (replicate n p)
 
 -- | This one is done for you.
 --
@@ -437,7 +455,9 @@ ageParser =
 firstNameParser ::
   Parser Chars
 firstNameParser =
-  error "todo: Course.Parser#firstNameParser"
+  -- (\c -> list lower) =<< upper
+  lift2 (:.) upper (list lower)
+
 
 -- | Write a parser for Person.surname.
 --
@@ -459,7 +479,8 @@ firstNameParser =
 surnameParser ::
   Parser Chars
 surnameParser =
-  error "todo: Course.Parser#surnameParser"
+  lift3 (\a b c -> a :. b ++ c) upper (thisMany 5 lower) (list lower)
+
 
 -- | Write a parser for Person.smoker.
 --
@@ -478,7 +499,7 @@ surnameParser =
 smokerParser ::
   Parser Bool
 smokerParser =
-  error "todo: Course.Parser#smokerParser"
+  True <$ is 'y' ||| False <$ is 'n'
 
 -- | Write part of a parser for Person#phoneBody.
 -- This parser will only produce a string of digits, dots or hyphens.
@@ -500,7 +521,7 @@ smokerParser =
 phoneBodyParser ::
   Parser Chars
 phoneBodyParser =
-  error "todo: Course.Parser#phoneBodyParser"
+  list (digit ||| is '.' ||| is '-')
 
 -- | Write a parser for Person.phone.
 --
@@ -522,7 +543,7 @@ phoneBodyParser =
 phoneParser ::
   Parser Chars
 phoneParser =
-  error "todo: Course.Parser#phoneParser"
+  lift3 (\a b _-> a :. b) digit phoneBodyParser (is '#')
 
 -- | Write a parser for Person.
 --
@@ -575,8 +596,22 @@ phoneParser =
 -- Result >< Person 123 "Fred" "Clarkson" True "123-456.789"
 personParser ::
   Parser Person
-personParser =
-  error "todo: Course.Parser#personParser"
+-- personParser = do
+--   age <- ageParser
+--   firstName <- spaces1 *> firstNameParser
+--   surName <- spaces1 *> surnameParser
+--   smoker <- spaces1 *> smokerParser
+--   phone <- phoneParser
+--   return (Person age firstName surName smoker phone)
+personParser = 
+  Person <$>
+    ageParser <*>
+    (spaces1 *> firstNameParser) <*>
+    (spaces1 *> surnameParser) <*>
+    (spaces1 *> smokerParser) <*>
+    (spaces1 *> phoneParser)
+-- or user lift5
+
 
 -- Make sure all the tests pass!
 

@@ -145,7 +145,7 @@ evalT ::
   StateT s f a
   -> s
   -> f a
-evalT sa s=
+evalT sa s =
   fst <$> runStateT sa s
 
 
